@@ -1,0 +1,11 @@
+.vscode
+.cursorignore
+
+# Sensitive configuration files
+scripts/.env*
+scripts/.env-contao-backup
+
+# Security: .htaccess files may contain IP restrictions
+trigger/.htaccess
+
+docs

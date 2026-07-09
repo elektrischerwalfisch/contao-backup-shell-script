@@ -1,0 +1,62 @@
+# Contao Backup Configuration File - Example Template
+# 
+# Copy this file to .env-contao-backup and update the values below.
+# The .env-contao-backup file is excluded from version control for security.
+#
+# To set up:
+# 1. Copy this file: cp env-contao-backup.example .env-contao-backup
+# 2. Edit .env-contao-backup and update all placeholder values
+# 3. Set secure permissions: chmod 600 .env-contao-backup
+
+# Contao and backup paths (use absolute paths!)
+PROJECT_ROOT="/path/to/contao"
+BACKUP_FOLDER="/path/to/contao-backups"
+# LOG_FILE will be set automatically to $BACKUP_FOLDER/backup.log if not specified
+# You can override it with an absolute path if needed
+# LOG_FILE="/custom/path/to/backup.log"
+MAX_BACKUPS=8                         # Maximum number of backups to keep
+
+# Excluded files/folders for the file archive (relative to PROJECT_ROOT)
+# Modify this list to adjust which paths are excluded from the tar archive
+# Note: This is a space-separated list in the config file
+EXCLUDES="var/cache var/log vendor node_modules"
+
+# Contao version (default: "5" for Contao 5.x)
+# Set to "4" for Contao 4.x or "5" for Contao 5.x
+# If not specified, defaults to "5" (Contao 5.x)
+# CONTAO_VERSION="5"
+
+# Database configuration file path for Contao 4.x (optional)
+# Only used if CONTAO_VERSION is set to "4"
+# Can be relative to PROJECT_ROOT or absolute path
+# Default: "config/parameters.yml" (if not specified)
+# Examples:
+# DATABASE_CONFIG_FILE="config/parameters.yml"
+# DATABASE_CONFIG_FILE="/absolute/path/to/config/parameters.yml"
+# DATABASE_CONFIG_FILE="config/parameters.yaml"
+# DATABASE_CONFIG_FILE="config/parameters.php"
+
+# Compression settings (for IONOS and other hosts with timeout issues, set to 0)
+# 1 = enabled (default, recommended for all-inkl.com)
+# 0 = disabled (recommended for IONOS to avoid timeout issues)
+ENABLE_COMPRESSION=1
+
+# Use nice for tar command (reduces priority, helps on IONOS)
+# 1 = enabled (recommended for IONOS)
+# 0 = disabled (default)
+USE_NICE_FOR_TAR=0
+
+# Email notification settings
+SEND_EMAIL_ON_ERROR=1                 # Set to 1 to enable email notification on errors
+EMAIL_SUBJECT_DEFAULT="Contao Backup Error Report for www.mywebsite.de"
+
+# SMTP settings for shared hosting
+SMTP_HOST="mail.yourdomain.tld"
+SMTP_PORT="587"
+SMTP_USER="backup@yourdomain.tld"
+SMTP_PASS="your_password"
+
+# Email addresses
+EMAIL_FROM="backup@yourdomain.tld"
+EMAIL_TO="info@yourdomain.tld"
+
