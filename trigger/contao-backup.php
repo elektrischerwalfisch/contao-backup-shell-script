@@ -10,7 +10,7 @@
  * 2. Call this script via URL with a cronjob or via browser
  *
  * SECURITY:
- * - Restrict access via .htaccess to authorized IP addresses (recommended)
+ * - See README section "Trigger Security (Current Limitations and TODO)".
  */
 
 // ============================================================================
@@ -48,6 +48,10 @@ if (!$shellScript || !file_exists($shellScript)) {
 // If this fails silently, it's usually fine - the script might already be executable
 chmod($shellScript, 0755);
 
+// Common troubleshooting hints for trigger errors.
+$errorHint = "Hint: Check scripts/.env-contao-backup and verify paths, database config, and required tools are configured.\n";
+$logHint = "See BACKUP_FOLDER/backup.log for detailed diagnostics.\n";
+
 // ============================================================================
 // EXECUTE SCRIPT
 // ============================================================================
@@ -68,6 +72,8 @@ if ($executionMode === 'background') {
         echo "ERROR: Could not start backup in background.\n";
         echo "Please check if setsid is available on your system.\n";
         echo "If background execution is not available, change \$executionMode to 'sync' in the configuration.\n";
+        echo $errorHint;
+        echo $logHint;
     }
 } else {
     // Synchronous execution (default, works on all-inkl)
@@ -83,6 +89,8 @@ if ($executionMode === 'background') {
     } else {
         http_response_code(500);
         echo "ERROR: Backup script failed with exit code $returnCode.\n\n";
+        echo $errorHint;
+        echo $logHint . "\n";
         echo "Output:\n";
         echo implode("\n", $output);
     }

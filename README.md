@@ -25,14 +25,13 @@ contao-backup-shell-script/
 │   ├── contao-backup.sh        # Main backup script
 │   └── env-contao-backup.example # Configuration template
 └── trigger/                     # PHP trigger directory (publicly accessible via URL)
-    ├── contao-backup.php       # PHP trigger script
-    └── .htaccess.example       # Access restrictions template (IP-based)
+    └── contao-backup.php       # PHP trigger script
 ```
 
 ### Directory Purpose
 
 - **`scripts/`**: Contains the main shell script and configuration files. This directory should **not** be publicly accessible via web URL to protect the backup script and sensitive configuration.
-- **`trigger/`**: Contains PHP scripts that can be called via URL to execute the backup script. This directory is publicly accessible but should be protected via `.htaccess` to restrict access to authorized IP addresses (e.g., the cronjob server IP).
+- **`trigger/`**: Contains PHP scripts that can be called via URL to execute the backup script. Keep exposure minimal and follow the [Trigger Security](#trigger-security-current-limitations-and-todo) guidance.
 
 ---
 
@@ -111,35 +110,8 @@ contao-backup-shell-script/
      - Script path (default: `../scripts/contao-backup.sh`)
      - Execution mode: `'sync'` (default, for all-inkl) or `'background'` (for IONOS to avoid timeouts)
 
-5. Secure the PHP trigger (recommended):
-   
-   To protect the PHP trigger script from unauthorized access, add a `.htaccess` file in the `trigger/` directory that restricts access to specific IP addresses (e.g., the IP of your cronjob server):
-   
-   **Option A**: Copy the example file and edit it:
-   ```bash
-   cp trigger/.htaccess.example trigger/.htaccess
-   nano trigger/.htaccess
-   ```
-   
-   **Option B**: Create the file manually with the following content:
-   ```apache
-   # Block all access by default
-   Order Deny,Allow
-   Deny from all
-   
-   # Allow access only for specific IPs (replace with your actual cronjob server IP)
-   # Example: Allow from 85.13.130.203
-   Allow from YOUR_CRONJOB_SERVER_IP
-   ```
-   
-   **Note**: For Apache 2.4+, use `Require` syntax instead:
-   ```apache
-   # Require ip YOUR_CRONJOB_SERVER_IP
-   # Example: Require ip 85.13.130.203
-   Require ip YOUR_CRONJOB_SERVER_IP
-   ```
-   
-   **Important**: Replace `YOUR_CRONJOB_SERVER_IP` with the actual IP address of your cronjob server. You can find this IP in your hosting panel's cronjob settings or by checking the server logs.
+5. Review trigger security before exposing the PHP trigger via URL:
+   - See [Trigger Security (Current Limitations and TODO)](#trigger-security-current-limitations-and-todo).
 
 6. (Optional) Add a cronjob for automation:
    
@@ -156,7 +128,7 @@ contao-backup-shell-script/
    - Configure a URL-based cronjob in your hosting panel
    - **Important**: Use only the `trigger/` directory URL, never the `scripts/` directory
    - Example: `https://yourdomain.com/cronjobs/contao-backup-shell-script/trigger/contao-backup.php`
-   - The `.htaccess` file will protect the trigger from unauthorized access
+   - See [Trigger Security](#trigger-security-current-limitations-and-todo) before relying on URL-based cron access
 
 ---
 
@@ -225,6 +197,27 @@ $executionMode = 'background'; // Run in background to avoid timeout issues
   - Recommended for IONOS to avoid timeout issues
   - Check `BACKUP_FOLDER/backup.log` for progress
   - Falls back to sync mode if background execution fails
+
+---
+
+## Trigger Security (Current Limitations and TODO)
+
+Static `.htaccess` IP allowlists for shared-hosting cronjobs are unreliable because cronjob source IPs can change.
+
+Current policy:
+
+- keep trigger exposure minimal
+- monitor access via logs
+- do not treat static IP allowlists as primary protection
+
+TODO:
+
+- implement a stable trigger authentication mechanism that does not rely on fixed source IPs
+- document the final approach in this README
+
+Planning draft:
+
+- `docs/TOKEN_AUTHENTICATION_PLAN.md`
 
 ---
 
@@ -349,7 +342,7 @@ Please investigate the issue for resolution.
    - Ensure the user running the script has read/write permissions for `PROJECT_ROOT` and `BACKUP_FOLDER`.
    - If you don't have SSH access, use the PHP trigger file (`trigger/contao-backup.php`) which will set execute permissions automatically.
    - The config file `.env-contao-backup` should have permissions `600` (read/write for owner only).
-   - **Security**: Never expose the `scripts/` directory via web URL. Only the `trigger/` directory should be accessible via URL, and it should be protected with `.htaccess` to restrict access to authorized IP addresses.
+   - **Security**: Never expose the `scripts/` directory via web URL. Only the `trigger/` directory should be accessible via URL. See [Trigger Security](#trigger-security-current-limitations-and-todo).
 
 4. **Backup File Too Large**
    - Adjust the `EXCLUDES` variable in `.env-contao-backup` to exclude more folders:
