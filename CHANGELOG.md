@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-13
+
+- chore: Bump version to 1.1.0
 - docs: Document recommended server layout and separate cron URL for PHP trigger
 - feat: Add `$debugMode` to PHP trigger for minimal production HTTP output
 

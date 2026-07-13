@@ -4,7 +4,7 @@
 # Contao Backup Shell Script (Universal)
 # ============================================================================
 # Script Name:    contao-backup.sh
-# Version:        1.0.0
+# Version:        1.1.0
 # Description:    Automates the backup of Contao (4.x and 5.x) project files 
 #                 and database with logging and error reporting.
 # Developed for:  Shared hosting environments
