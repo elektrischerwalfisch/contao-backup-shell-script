@@ -82,8 +82,13 @@ Config options in the file:
 
 - `$shellScriptPath`: default `../scripts/contao-backup.sh`
 - `$executionMode`:
-  - `sync`: waits for completion, returns output (works well on all-inkl)
-  - `background`: starts detached process, returns PID (recommended on IONOS for large backups)
+  - `sync`: waits for completion (works well on all-inkl)
+  - `background`: starts detached process (recommended on IONOS for large backups)
+- `$debugMode`:
+  - `false` (default): minimal HTTP output
+  - `true`: verbose HTTP output for troubleshooting
+
+By default, the trigger returns minimal HTTP messages only. Full diagnostics are written to `BACKUP_FOLDER/backup.log`.
 
 ---
 
@@ -94,6 +99,8 @@ Static `.htaccess` IP allowlists for shared-hosting cronjobs are unreliable beca
 Current policy:
 
 - keep trigger exposure minimal
+- keep `$debugMode = false` in production (minimal HTTP responses only)
+- use `backup.log` for diagnostics, not the HTTP response body
 - monitor access via logs
 - do not treat static IP allowlists as primary protection
 
@@ -122,6 +129,10 @@ TODO:
 - **Timeouts on shared hosting**
   - Set `$executionMode = 'background'` in the PHP trigger
   - Consider `ENABLE_COMPRESSION=0` and `USE_NICE_FOR_TAR=1`
+- **Trigger returns only `Error` with no details**
+  - Check `BACKUP_FOLDER/backup.log` for the full error log
+  - If you need more detail in the HTTP response (e.g. without log access), set `$debugMode = true` in `trigger/contao-backup.php` temporarily
+  - Set `$debugMode` back to `false` when done (required for production/cron)
 
 ---
 

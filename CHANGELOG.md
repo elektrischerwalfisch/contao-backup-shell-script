@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- feat: Add `$debugMode` to PHP trigger for minimal production HTTP output
+
 ## [1.0.0] - 2026-07-10
 
 - chore: Bump version to 1.0.0
