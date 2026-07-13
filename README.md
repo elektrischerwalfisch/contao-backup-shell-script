@@ -31,18 +31,25 @@ Developed for shared hosting, tested on all-inkl and IONOS.
 
 ## Project Structure
 
+This tool is **not part of the Contao installation**. Deploy it in a **separate directory** on the server and point `PROJECT_ROOT` at your Contao project.
+
+### Recommended server layout (example)
+
 ```text
-contao-backup-shell-script/
-├── README.md
-├── scripts/
-│   ├── contao-backup.sh
-│   └── env-contao-backup.example
-└── trigger/
-    └── contao-backup.php
+/home/user/www                           (account home, example)
+├── contao-website/                      ← PROJECT_ROOT (Contao installation)
+│   ├── public/ or web/                  ← Contao document root (do not put this tool here)
+│   └── ...
+├── contao-backup-shell-script/          ← this repository (separate location)
+│   ├── scripts/
+│   │   ├── contao-backup.sh
+│   │   └── .env-contao-backup
+│   └── trigger/
+│       └── contao-backup.php
+└── contao-backups/                      ← BACKUP_FOLDER
 ```
 
-- `scripts/` must not be publicly reachable via web.
-- `trigger/` may be web-reachable for URL-based cron.
+Use a separate cron URL or subdomain for `trigger/` (not the Contao site URL).
 
 ---
 

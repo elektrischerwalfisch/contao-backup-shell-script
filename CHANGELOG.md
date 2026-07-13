@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- docs: Document recommended server layout and separate cron URL for PHP trigger
 - feat: Add `$debugMode` to PHP trigger for minimal production HTTP output
 
 ## [1.0.0] - 2026-07-10
